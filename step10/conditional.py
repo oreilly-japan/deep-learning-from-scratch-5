@@ -191,10 +191,13 @@ optimizer = Adam(model.parameters(), lr=lr)
 
 losses = []
 for epoch in range(epochs):
-    images, labels = diffuser.sample(model)
-    show_images(images, labels)
     loss_sum = 0.0
     cnt = 0
+
+    # generate samples every epoch ===================
+    #images = diffuser.sample(model)
+    #show_images(images)
+    # ================================================
 
     for images, labels in tqdm(dataloader):
         optimizer.zero_grad()
@@ -219,3 +222,7 @@ for epoch in range(epochs):
 # plot losses
 plt.plot(losses)
 plt.show()
+
+# generate samples
+images = diffuser.sample(model)
+show_images(images)

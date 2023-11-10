@@ -106,7 +106,8 @@ class Diffuser:
 
     def add_noise(self, x_0, t):
         alpha_bar = self.alpha_bars[t]  # (N,)
-        alpha_bar = alpha_bar.view(alpha_bar.size(0), 1, 1, 1)  # (N, 1, 1, 1)
+        N = alpha_bar.size(0)
+        alpha_bar = alpha_bar.view(N, 1, 1, 1)  # (N, 1, 1, 1)
         noise = torch.randn_like(x_0, device=self.device)
 
         x_t = torch.sqrt(alpha_bar) * x_0 + torch.sqrt(1 - alpha_bar) * noise
@@ -181,10 +182,13 @@ optimizer = Adam(model.parameters(), lr=lr)
 
 losses = []
 for epoch in range(epochs):
-    images = diffuser.sample(model)
-    show_images(images)
     loss_sum = 0.0
     cnt = 0
+
+    # generate samples every epoch ===================
+    #images = diffuser.sample(model)
+    #show_images(images)
+    # ================================================
 
     for images, labels in tqdm(dataloader):
         optimizer.zero_grad()
@@ -208,3 +212,7 @@ for epoch in range(epochs):
 # plot losses
 plt.plot(losses)
 plt.show()
+
+# generate samples
+images = diffuser.sample(model)
+show_images(images)
