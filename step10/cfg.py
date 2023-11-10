@@ -13,7 +13,7 @@ from tqdm import tqdm
 img_size = 28
 batch_size = 128
 num_timesteps = 1000
-epochs = 50
+epochs = 10
 lr = 1e-3
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -80,17 +80,22 @@ class Diffuser:
             transforms.ToPILImage(),
         ])
         images = [reverse_transforms(x[i]) for i in range(batch_size)]
-        return images
+        return images, labels
 
-def show_images(images, rows=2, cols=10):
+def show_images(images, labels=None, rows=2, cols=10):
+    print(images[0])
     fig = plt.figure(figsize=(cols, rows))
     i = 0
     for r in range(rows):
         for c in range(cols):
-            fig.add_subplot(rows, cols, i + 1)
+            ax = fig.add_subplot(rows, cols, i + 1)
             plt.imshow(images[i], cmap="gray")
-            plt.axis('off')
+            if labels is not None:
+                ax.set_xlabel(labels[i].item())
+            ax.get_xaxis().set_ticks([])  # to hide x-axis ticks
+            ax.get_yaxis().set_ticks([])  # to hide y-axis ticks
             i += 1
+    plt.tight_layout()  # ensures adequate spacing between subplots
     plt.show()
 
 def _pos_encoding(t, output_dim, device="cpu"):
@@ -194,8 +199,8 @@ for epoch in range(epochs):
     cnt = 0
 
     # generate samples every epoch ===================
-    #images = diffuser.sample(model)
-    #show_images(images)
+    #images, labels = diffuser.sample(model)
+    #show_images(images, labels)
     # ================================================
 
     for images, labels in tqdm(dataloader):
@@ -225,5 +230,5 @@ plt.plot(losses)
 plt.show()
 
 # generate samples
-images = diffuser.sample(model)
-show_images(images)
+images, labels = diffuser.sample(model)
+show_images(images, labels)

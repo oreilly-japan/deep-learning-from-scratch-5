@@ -82,6 +82,7 @@ class Diffuser:
         return images, labels
 
 def show_images(images, labels=None, rows=2, cols=10):
+    print(images[0])
     fig = plt.figure(figsize=(cols, rows))
     i = 0
     for r in range(rows):
@@ -196,8 +197,8 @@ for epoch in range(epochs):
     cnt = 0
 
     # generate samples every epoch ===================
-    #images = diffuser.sample(model)
-    #show_images(images)
+    #images, lables = diffuser.sample(model)
+    #show_images(images, labels)
     # ================================================
 
     for images, labels in tqdm(dataloader):
@@ -225,5 +226,5 @@ plt.plot(losses)
 plt.show()
 
 # generate samples
-images = diffuser.sample(model)
-show_images(images)
+images, labels = diffuser.sample(model)
+show_images(images, labels)
