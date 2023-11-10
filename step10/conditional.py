@@ -8,7 +8,8 @@ from torch.utils.data import DataLoader
 from torch.optim import Adam
 import torch.nn.functional as F
 from torch import nn
-from tqdm.notebook import tqdm  # from tqdm import tqdm
+from tqdm import tqdm
+
 
 img_size = 28
 batch_size = 128
@@ -169,10 +170,10 @@ class UNet_conditional(nn.Module):
         x = self.bot1(x, t)
 
         x = self.upsample(x)
-        x = torch.cat([x, x1], dim=1)
+        x = torch.cat([x, x2], dim=1)
         x = self.up2(x, t)
         x = self.upsample(x)
-        x = torch.cat([x, x2], dim=1)
+        x = torch.cat([x, x1], dim=1)
         x = self.up1(x, t)
         x = self.out(x)
         return x

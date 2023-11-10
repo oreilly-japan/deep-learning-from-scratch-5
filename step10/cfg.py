@@ -160,18 +160,18 @@ class UNet_conditional(nn.Module):
         if labels is not None:
             t += self.label_emb(labels)
 
-        conv1 = self.down1(x, t)
-        x = self.maxpool(conv1)
-        conv2 = self.down2(x, t)
-        x = self.maxpool(conv2)
+        x1 = self.down1(x, t)
+        x = self.maxpool(x1)
+        x2 = self.down2(x, t)
+        x = self.maxpool(x2)
 
         x = self.bot1(x, t)
 
         x = self.upsample(x)
-        x = torch.cat([x, conv2], dim=1)
+        x = torch.cat([x, x2], dim=1)
         x = self.up2(x, t)
         x = self.upsample(x)
-        x = torch.cat([x, conv1], dim=1)
+        x = torch.cat([x, x1], dim=1)
         x = self.up1(x, t)
         x = self.out(x)
         return x
