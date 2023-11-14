@@ -12,5 +12,6 @@ samples = np.random.normal(mu, sigma, 10000)
 
 plt.hist(xs, bins='auto', density=True, alpha=0.7, label='original')
 plt.hist(samples, bins='auto', density=True, alpha=0.7, label='generated')
+plt.xlabel('Height (cm)')
 plt.legend()
 plt.show()

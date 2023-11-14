@@ -18,4 +18,5 @@ y = normal(x, mu, sigma)
 # plot
 plt.hist(xs, bins='auto', density=True)
 plt.plot(x, y)
+plt.xlabel('Height (cm)')
 plt.show()
