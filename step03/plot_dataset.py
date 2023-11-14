@@ -10,6 +10,6 @@ print(xs[0])
 
 small_xs = xs[:500]
 plt.scatter(small_xs[:, 0], small_xs[:, 1])
-plt.xlabel('Height[cm]')
-plt.ylabel('Weight[kg]')
+plt.xlabel('Height (cm)')
+plt.ylabel('Weight (kg)')
 plt.show()
