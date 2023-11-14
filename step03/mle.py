@@ -9,7 +9,6 @@ xs = np.loadtxt(path)
 mu = np.mean(xs, axis=0)
 cov = np.cov(xs, rowvar=False)
 
-# Plot
 def multivariate_normal(x, mu, cov):
     det = np.linalg.det(cov)
     inv = np.linalg.inv(cov)
