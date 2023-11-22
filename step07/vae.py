@@ -41,8 +41,8 @@ class Decoder(nn.Module):
         h = self.linear1(z)
         h = F.relu(h)
         h = self.linear2(h)
-        y = F.sigmoid(h)
-        return y
+        x_hat = F.sigmoid(h)
+        return x_hat
 
 
 def reparameterize(mu, sigma):
