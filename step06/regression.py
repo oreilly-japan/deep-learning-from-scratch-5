@@ -20,8 +20,6 @@ def mean_squared_error(x0, x1):
 lr = 0.1
 iters = 100
 
-optimizer = torch.optim.SGD((W, b), lr=lr)
-
 for i in range(iters):
     y_hat = predict(x)
     loss = mean_squared_error(y, y_hat)
@@ -34,9 +32,10 @@ for i in range(iters):
     W.grad.zero_()
     b.grad.zero_()
 
-    if i % 10 == 0: #10回ごとに出力
+    if i % 10 == 0: # print every 10 iterations
         print(loss.item())
 
+print(loss.item())
 print('====')
 print('W =', W.item())
 print('b =', b.item())
