@@ -16,11 +16,11 @@ batch_size = 128
 num_timesteps = 1000
 epochs = 10
 lr = 1e-3
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 class Diffuser:
-    def __init__(self, num_timesteps=1000, beta_start=0.0001, beta_end=0.02, device="cpu"):
+    def __init__(self, num_timesteps=1000, beta_start=0.0001, beta_end=0.02, device='cpu'):
         self.num_timesteps = num_timesteps
         self.device = device
         self.betas = torch.linspace(beta_start, beta_end, num_timesteps, device=device)
@@ -88,7 +88,7 @@ def show_images(images, labels=None, rows=2, cols=10):
     for r in range(rows):
         for c in range(cols):
             ax = fig.add_subplot(rows, cols, i + 1)
-            plt.imshow(images[i], cmap="gray")
+            plt.imshow(images[i], cmap='gray')
             if labels is not None:
                 ax.set_xlabel(labels[i].item())
             ax.get_xaxis().set_ticks([])  # to hide x-axis ticks
@@ -97,7 +97,7 @@ def show_images(images, labels=None, rows=2, cols=10):
     plt.tight_layout()  # ensures adequate spacing between subplots
     plt.show()
 
-def _pos_encoding(t, output_dim, device="cpu"):
+def _pos_encoding(t, output_dim, device='cpu'):
     D = output_dim
     v = torch.zeros(D, device=device)
 
@@ -183,7 +183,7 @@ data_transforms = transforms.Compose([
         transforms.ToTensor(), # Scales data into [0,1]
         transforms.Lambda(lambda t: (t * 2) - 1) # Scale between [-1, 1]
 ])
-dataset = torchvision.datasets.MNIST(root="./data", download=True, transform=data_transforms)
+dataset = torchvision.datasets.MNIST(root='./data', download=True, transform=data_transforms)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 diffuser = Diffuser(num_timesteps, device=device)
@@ -219,7 +219,7 @@ for epoch in range(epochs):
 
     loss_avg = loss_sum / cnt
     losses.append(loss_avg)
-    print(f"Epoch {epoch} | Loss: {loss_avg}")
+    print(f'Epoch {epoch} | Loss: {loss_avg}')
 
 # plot losses
 plt.plot(losses)

@@ -113,5 +113,5 @@ with torch.no_grad():
 
 grid_img = torchvision.utils.make_grid(generated_images, nrow=8, padding=2, normalize=True)
 plt.imshow(grid_img.permute(1, 2, 0))
-plt.axis("off")
+plt.axis('off')
 plt.show()
