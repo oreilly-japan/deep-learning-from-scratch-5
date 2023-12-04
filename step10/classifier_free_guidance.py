@@ -34,7 +34,7 @@ class Diffuser:
         x_t = torch.sqrt(alpha_bar) * x_0 + torch.sqrt(1 - alpha_bar) * noise
         return x_t, noise
 
-    def denoise(self, model, x, t, labels, cfg_scale):
+    def denoise(self, model, x, t, labels, gamma):
         alpha = self.alphas[t]
         alpha_bar = self.alpha_bars[t]
         alpha_bar_prev = self.alpha_bars[t-1]
@@ -48,7 +48,7 @@ class Diffuser:
         with torch.no_grad():
             eps = model(x, t, labels)
             eps_uncond = model(x, t)
-            eps = eps_uncond + cfg_scale * (eps - eps_uncond)
+            eps = eps_uncond + gamma * (eps - eps_uncond)
         model.train()
 
         mu = (x - ((1-alpha) / torch.sqrt(1-alpha_bar)) * eps) / torch.sqrt(alpha)
@@ -61,7 +61,7 @@ class Diffuser:
 
             return mu + noise * torch.sqrt(variance)
 
-    def sample(self, model, x_shape=(20, 1, 28, 28), labels=None, cfg_scale=3.0):
+    def sample(self, model, x_shape=(20, 1, 28, 28), labels=None, gamma=3.0):
         batch_size = x_shape[0]
         x = torch.randn(x_shape, device=self.device)
         if labels is None:
@@ -69,7 +69,7 @@ class Diffuser:
 
         for i in tqdm(range(self.num_timesteps)[::-1]):
             t = torch.tensor([i] * batch_size, device=self.device, dtype=torch.long)
-            x = self.denoise(model, x, t, labels, cfg_scale)
+            x = self.denoise(model, x, t, labels, gamma)
             x = torch.clamp(x, -1.0, 1.0)
 
         reverse_transforms = transforms.Compose([
@@ -141,8 +141,8 @@ class ConvBlock(nn.Module):
         return y
 
 
-class UNet_conditional(nn.Module):
-    def __init__(self, in_ch=1, time_dim=100, num_lables=None):
+class UNetCond(nn.Module):
+    def __init__(self, in_ch=1, time_dim=100, num_labels=None):
         super().__init__()
         self.time_dim = time_dim
 
@@ -156,8 +156,8 @@ class UNet_conditional(nn.Module):
         self.maxpool = nn.MaxPool2d(2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear')
 
-        if num_lables is not None:
-            self.label_emb = nn.Embedding(num_lables, time_dim)
+        if num_labels is not None:
+            self.label_emb = nn.Embedding(num_labels, time_dim)
 
     def forward(self, x, timesteps, labels=None):
         t = pos_encoding(timesteps, self.time_dim)
@@ -189,7 +189,7 @@ dataset = torchvision.datasets.MNIST(root='./data', download=True, transform=dat
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 diffuser = Diffuser(num_timesteps, device=device)
-model = UNet_conditional(num_lables=10)
+model = UNetCond(num_labels=10)
 model.to(device)
 optimizer = Adam(model.parameters(), lr=lr)
 
