@@ -16,10 +16,10 @@ batch_size = 128
 num_timesteps = 1000
 epochs = 10
 lr = 1e-3
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
-def _pos_encoding(time_idx, output_dim, device="cpu"):
+def _pos_encoding(time_idx, output_dim, device='cpu'):
     t, D = time_idx, output_dim
     v = torch.zeros(D, device=device)
 
@@ -30,7 +30,7 @@ def _pos_encoding(time_idx, output_dim, device="cpu"):
     v[1::2] = torch.cos(t / div_term[1::2])
     return v
 
-def pos_encoding(timesteps, output_dim):
+def pos_encoding(timesteps, output_dim, device='cpu'):
     batch_size = len(timesteps)
     device = timesteps.device
     v = torch.zeros(batch_size, output_dim, device=device)
@@ -49,15 +49,16 @@ class ConvBlock(nn.Module):
             nn.BatchNorm2d(out_ch),
             nn.ReLU()
         )
-        self.linears = nn.Sequential(
+        self.mlp = nn.Sequential(
             nn.Linear(time_dim, in_ch),
             nn.ReLU(),
             nn.Linear(in_ch, in_ch)
         )
 
     def forward(self, x, t):
-        N = len(x)
-        t = self.linears(t).view(N, -1, 1, 1)
+        N, C, _, _ = x.shape
+        t = self.mlp(t)
+        t = t.view(N, C, 1, 1)
         y = self.convs(x + t)
         return y
 
@@ -77,7 +78,7 @@ class UNet(nn.Module):
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear')
 
     def forward(self, x, timesteps):
-        v = pos_encoding(timesteps, self.time_dim)
+        v = pos_encoding(timesteps, self.time_dim, x.device)
 
         x1 = self.down1(x, v)
         x = self.maxpool(x1)
@@ -97,7 +98,7 @@ class UNet(nn.Module):
 
 
 class Diffuser:
-    def __init__(self, num_timesteps=1000, beta_start=0.0001, beta_end=0.02, device="cpu"):
+    def __init__(self, num_timesteps=1000, beta_start=0.0001, beta_end=0.02, device='cpu'):
         self.num_timesteps = num_timesteps
         self.device = device
         self.betas = torch.linspace(beta_start, beta_end, num_timesteps, device=device)
@@ -125,18 +126,23 @@ class Diffuser:
 
         model.eval()
         with torch.no_grad():
-            eps = model(x, t)
+            y = model(x, t)
         model.train()
 
-        mu = (x - ((1-alpha) / torch.sqrt(1-alpha_bar)) * eps) / torch.sqrt(alpha)
+        eps = torch.randn_like(x, device=self.device)
+        eps[t == 0] = 0  # no noise at t=0
 
-        if t[0] == 0:
-            return mu
-        else:
-            noise = torch.randn_like(x, device=self.device)
-            variance = (1-alpha) * (1-alpha_bar_prev) / (1-alpha_bar)
+        mu = (x - ((1-alpha) / torch.sqrt(1-alpha_bar)) * y) / torch.sqrt(alpha)
+        std = torch.sqrt((1-alpha) * (1-alpha_bar_prev) / (1-alpha_bar))
+        return mu + eps * std
 
-            return mu + noise * torch.sqrt(variance)
+    def reverse_to_img(self, x):
+        x = x * 255.
+        x = x.clamp(0, 255)
+        x = x.to(torch.uint8)
+        x = x.cpu()
+        to_pil = transforms.ToPILImage()
+        return to_pil(x)
 
     def sample(self, model, x_shape=(20, 1, 28, 28)):
         batch_size = x_shape[0]
@@ -147,14 +153,7 @@ class Diffuser:
             x = self.denoise(model, x, t)
             x = torch.clamp(x, -1.0, 1.0)
 
-        reverse_transforms = transforms.Compose([
-            transforms.Lambda(lambda t: (t + 1) / 2),
-            transforms.Lambda(lambda t: t.permute(1, 2, 0)), # (C,H,W) to (H,W,C)
-            transforms.Lambda(lambda t: t * 255.),
-            transforms.Lambda(lambda t: t.cpu().numpy().astype(np.uint8)),
-            transforms.ToPILImage(),
-        ])
-        images = [reverse_transforms(x[i]) for i in range(batch_size)]
+        images = [self.reverse_to_img(x[i]) for i in range(batch_size)]
         return images
 
 def show_images(images, rows=2, cols=10):
@@ -163,7 +162,7 @@ def show_images(images, rows=2, cols=10):
     for r in range(rows):
         for c in range(cols):
             fig.add_subplot(rows, cols, i + 1)
-            plt.imshow(images[i], cmap="gray")
+            plt.imshow(images[i], cmap='gray')
             plt.axis('off')
             i += 1
     plt.show()
@@ -172,7 +171,7 @@ data_transforms = transforms.Compose([
         transforms.ToTensor(), # Scales data into [0,1]
         transforms.Lambda(lambda t: (t * 2) - 1) # Scale between [-1, 1]
 ])
-dataset = torchvision.datasets.MNIST(root="./data", download=True, transform=data_transforms)
+dataset = torchvision.datasets.MNIST(root='./data', download=True, transform=data_transforms)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 diffuser = Diffuser(num_timesteps, device=device)
@@ -207,7 +206,7 @@ for epoch in range(epochs):
 
     loss_avg = loss_sum / cnt
     losses.append(loss_avg)
-    print(f"Epoch {epoch} | Loss: {loss_avg}")
+    print(f'Epoch {epoch} | Loss: {loss_avg}')
 
 # plot losses
 plt.plot(losses)

@@ -139,7 +139,7 @@ class ConvBlock(nn.Module):
         return y
 
 
-class UNet_conditional(nn.Module):
+class UNetCond(nn.Module):
     def __init__(self, in_ch=1, time_dim=100, num_labels=None):
         super().__init__()
         self.time_dim = time_dim
@@ -187,7 +187,7 @@ dataset = torchvision.datasets.MNIST(root='./data', download=True, transform=dat
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 diffuser = Diffuser(num_timesteps, device=device)
-model = UNet_conditional(num_labels=10)
+model = UNetCond(num_labels=10)
 model.to(device)
 optimizer = Adam(model.parameters(), lr=lr)
 
