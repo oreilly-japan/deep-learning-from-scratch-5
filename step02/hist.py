@@ -7,5 +7,6 @@ xs = np.loadtxt(path)
 print(xs.shape)
 
 plt.hist(xs, bins='auto', density=True)
-plt.xlabel('Height (cm)')
+plt.xlabel('Height(cm)')
+plt.ylabel('Probability Density')
 plt.show()
