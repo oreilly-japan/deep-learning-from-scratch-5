@@ -2,16 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-phis = np.array([0.2, 0.5, 0.3])
-mus = np.array([[-3.0, -1.5], [0.0, 0.0], [3.0, 1.5]])
-covs = np.array([
-    [[0.4, 0.5],
-     [0.5, 0.8]],
-    [[0.4, 0.5],
-     [0.5, 0.8]],
-    [[0.4, 0.5],
-     [0.5, 0.8]],
-])
+mus = np.array([[2.0, 54.50],
+                [4.3, 80.0]])
+covs = np.array([[[0.07, 0.44],
+                  [0.44, 33.7]],
+                 [[0.17, 0.94],
+                  [0.94, 36.00 ]]])
+phis = np.array([0.35, 0.65])
 
 
 def multivariate_normal(x, mu, cov):
@@ -31,13 +28,9 @@ def gmm(x, phis, mus, covs):
     return y
 
 
-x = np.array([2.0, 0.0])
-y = gmm(x, phis, mus, covs)
-print(y)
-
-
 # plot
-xs = ys = np.arange(-5, 5, 0.1)
+xs = np.arange(1, 6, 0.1)
+ys = np.arange(40, 100, 0.1)
 X, Y = np.meshgrid(xs, ys)
 Z = np.zeros_like(X)
 
@@ -50,7 +43,8 @@ fig = plt.figure()
 ax1 = fig.add_subplot(1, 2, 1, projection='3d')
 ax1.set_xlabel('x')
 ax1.set_ylabel('y')
-ax1.plot_surface(X, Y, Z, cmap='jet')
+ax1.set_zlabel('z')
+ax1.plot_surface(X, Y, Z, cmap='viridis')
 
 ax2 = fig.add_subplot(1, 2, 2)
 ax2.set_xlabel('x')
