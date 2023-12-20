@@ -13,7 +13,8 @@ covs = np.array([np.eye(2), np.eye(2)])
 
 K = len(phis)  # 2
 N = len(xs)  # 272
-ITERS = 10
+MAX_ITERS = 100
+THESHOLD = 1e-4
 
 def multivariate_normal(x, mu, cov):
     det = np.linalg.det(cov)
@@ -31,9 +32,21 @@ def gmm(x, phis, mus, covs):
         y += phi * multivariate_normal(x, mu, cov)
     return y
 
+def likelihood(xs, phis, mus, covs):
+    """ log likelihood """
+    eps = 1e-8
+    L = 0
+    N = len(xs)
+    for x in xs:
+        y = gmm(x, phis, mus, covs)
+        L += np.log(y + eps)
+    return L / N
 
-for iter in range(ITERS):
-    # E-step
+
+current_likelihood = likelihood(xs, phis, mus, covs)
+
+for iter in range(MAX_ITERS):
+    # E-step ====================
     qs = np.zeros((N, K))
     for n in range(N):
         x = xs[n]
@@ -42,7 +55,7 @@ for iter in range(ITERS):
             qs[n, k] = phi * multivariate_normal(x, mu, cov)
         qs[n] /= gmm(x, phis, mus, covs)
 
-    # M-step
+    # M-step ====================
     qs_sum = qs.sum(axis=0)
     for k in range(K):
         # 1. phis
@@ -61,6 +74,17 @@ for iter in range(ITERS):
             z = z[:, np.newaxis]  # column vector
             c += qs[n, k] * z @ z.T
         covs[k] = c / qs_sum[k]
+
+    # thershold check ====================
+    print(f'{current_likelihood:.3f}')
+
+    next_likelihood = likelihood(xs, phis, mus, covs)
+    diff = np.abs(next_likelihood - current_likelihood)
+    if diff < THESHOLD:
+        break
+    current_likelihood = next_likelihood
+
+
 
 # visualize
 def plot_contour(w, mus, covs):
