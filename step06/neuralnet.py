@@ -37,6 +37,7 @@ for i in range(iters):
     if i % 1000 == 0:
         print(loss.item())
 
+print(loss.item())
 
 # plot
 import matplotlib.pyplot as plt

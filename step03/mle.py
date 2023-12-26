@@ -18,9 +18,8 @@ def multivariate_normal(x, mu, cov):
     return y
 
 small_xs = xs[:500]
-x = np.arange(150, 195, 0.5)
-y = np.arange(45, 75, 0.5)
-X, Y = np.meshgrid(x, y)
+X, Y = np.meshgrid(np.arange(150, 195, 0.5),
+                   np.arange(45, 75, 0.5))
 Z = np.zeros_like(X)
 
 for i in range(X.shape[0]):
@@ -32,7 +31,8 @@ fig = plt.figure()
 ax1 = fig.add_subplot(1, 2, 1, projection='3d')
 ax1.set_xlabel('x')
 ax1.set_ylabel('y')
-ax1.plot_surface(X, Y, Z, cmap='jet')
+ax1.set_zlabel('z')
+ax1.plot_surface(X, Y, Z, cmap='viridis')
 
 ax2 = fig.add_subplot(1, 2, 2)
 ax2.scatter(small_xs[:,0], small_xs[:,1])

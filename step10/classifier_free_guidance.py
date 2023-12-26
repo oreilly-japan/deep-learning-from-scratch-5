@@ -15,11 +15,11 @@ batch_size = 128
 num_timesteps = 1000
 epochs = 10
 lr = 1e-3
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 class Diffuser:
-    def __init__(self, num_timesteps=1000, beta_start=0.0001, beta_end=0.02, device="cpu"):
+    def __init__(self, num_timesteps=1000, beta_start=0.0001, beta_end=0.02, device='cpu'):
         self.num_timesteps = num_timesteps
         self.device = device
         self.betas = torch.linspace(beta_start, beta_end, num_timesteps, device=device)
@@ -34,7 +34,7 @@ class Diffuser:
         x_t = torch.sqrt(alpha_bar) * x_0 + torch.sqrt(1 - alpha_bar) * noise
         return x_t, noise
 
-    def denoise(self, model, x, t, labels, cfg_scale):
+    def denoise(self, model, x, t, labels, gamma):
         alpha = self.alphas[t]
         alpha_bar = self.alpha_bars[t]
         alpha_bar_prev = self.alpha_bars[t-1]
@@ -48,7 +48,7 @@ class Diffuser:
         with torch.no_grad():
             eps = model(x, t, labels)
             eps_uncond = model(x, t)
-            eps = eps_uncond + cfg_scale * (eps - eps_uncond)
+            eps = eps_uncond + gamma * (eps - eps_uncond)
         model.train()
 
         mu = (x - ((1-alpha) / torch.sqrt(1-alpha_bar)) * eps) / torch.sqrt(alpha)
@@ -61,7 +61,7 @@ class Diffuser:
 
             return mu + noise * torch.sqrt(variance)
 
-    def sample(self, model, x_shape=(20, 1, 28, 28), labels=None, cfg_scale=3.0):
+    def sample(self, model, x_shape=(20, 1, 28, 28), labels=None, gamma=3.0):
         batch_size = x_shape[0]
         x = torch.randn(x_shape, device=self.device)
         if labels is None:
@@ -69,7 +69,7 @@ class Diffuser:
 
         for i in tqdm(range(self.num_timesteps)[::-1]):
             t = torch.tensor([i] * batch_size, device=self.device, dtype=torch.long)
-            x = self.denoise(model, x, t, labels, cfg_scale)
+            x = self.denoise(model, x, t, labels, gamma)
             x = torch.clamp(x, -1.0, 1.0)
 
         reverse_transforms = transforms.Compose([
@@ -89,7 +89,7 @@ def show_images(images, labels=None, rows=2, cols=10):
     for r in range(rows):
         for c in range(cols):
             ax = fig.add_subplot(rows, cols, i + 1)
-            plt.imshow(images[i], cmap="gray")
+            plt.imshow(images[i], cmap='gray')
             if labels is not None:
                 ax.set_xlabel(labels[i].item())
             ax.get_xaxis().set_ticks([])  # to hide x-axis ticks
@@ -98,7 +98,7 @@ def show_images(images, labels=None, rows=2, cols=10):
     plt.tight_layout()  # ensures adequate spacing between subplots
     plt.show()
 
-def _pos_encoding(t, output_dim, device="cpu"):
+def _pos_encoding(t, output_dim, device='cpu'):
     D = output_dim
     v = torch.zeros(D, device=device)
 
@@ -141,8 +141,8 @@ class ConvBlock(nn.Module):
         return y
 
 
-class UNet_conditional(nn.Module):
-    def __init__(self, in_ch=1, time_dim=100, num_lables=None):
+class UNetCond(nn.Module):
+    def __init__(self, in_ch=1, time_dim=100, num_labels=None):
         super().__init__()
         self.time_dim = time_dim
 
@@ -156,8 +156,8 @@ class UNet_conditional(nn.Module):
         self.maxpool = nn.MaxPool2d(2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear')
 
-        if num_lables is not None:
-            self.label_emb = nn.Embedding(num_lables, time_dim)
+        if num_labels is not None:
+            self.label_emb = nn.Embedding(num_labels, time_dim)
 
     def forward(self, x, timesteps, labels=None):
         t = pos_encoding(timesteps, self.time_dim)
@@ -185,11 +185,11 @@ data_transforms = transforms.Compose([
     transforms.ToTensor(), # Scales data into [0,1]
     transforms.Lambda(lambda t: (t * 2) - 1) # Scale between [-1, 1]
 ])
-dataset = torchvision.datasets.MNIST(root="./data", download=True, transform=data_transforms)
+dataset = torchvision.datasets.MNIST(root='./data', download=True, transform=data_transforms)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 diffuser = Diffuser(num_timesteps, device=device)
-model = UNet_conditional(num_lables=10)
+model = UNetCond(num_labels=10)
 model.to(device)
 optimizer = Adam(model.parameters(), lr=lr)
 
@@ -223,7 +223,7 @@ for epoch in range(epochs):
 
     loss_avg = loss_sum / cnt
     losses.append(loss_avg)
-    print(f"Epoch {epoch} | Loss: {loss_avg}")
+    print(f'Epoch {epoch} | Loss: {loss_avg}')
 
 # plot losses
 plt.plot(losses)

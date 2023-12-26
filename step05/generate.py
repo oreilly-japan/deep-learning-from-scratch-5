@@ -6,13 +6,13 @@ path = os.path.join(os.path.dirname(__file__), 'old_faithful.txt')
 original_xs = np.loadtxt(path)
 
 # learned parameters
-phis = np.array([0.35589156, 0.64410844])
-mus = np.array([[2.03643399, 54.47897503],
-                [4.28970224, 79.9686019]])
-covs = np.array([[[0.06920385, 0.43554569],
-                  [0.43554569, 33.6998689]],
-                 [[0.16991733, 0.93995968],
-                  [0.93995968, 36.0389029 ]]])
+mus = np.array([[2.0, 54.50],
+                [4.3, 80.0]])
+covs = np.array([[[0.07, 0.44],
+                  [0.44, 33.7]],
+                 [[0.17, 0.94],
+                  [0.94, 36.00 ]]])
+phis = np.array([0.35, 0.65])
 
 def multivariate_normal(x, mu, cov):
     det = np.linalg.det(cov)

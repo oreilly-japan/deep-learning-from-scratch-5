@@ -11,13 +11,28 @@
 
 |フォルダ名 |説明                             |
 |:--        |:--                              |
-|`step01`   |ステップ1で使用するソースコード  |
-|`step02`   |ステップ2で使用するソースコード  |
+|`step01`   |ステップ1で使用するコード  |
+|`step02`   |ステップ2で使用するコード  |
 |...        |...                              |
-|`step10`   |ステップ10で使用するソースコード |
+|`step10`   |ステップ10で使用するコード |
+|`notebooks`   |ステップ1〜10までのコードをJupyter Notebook形式で提供|
 
 
-ソースコードの解説は本書籍をご覧ください。
+## Jupyter Notebook
+
+本書のコードはJupyter Notebookでも用意しています。次の表にあるボタンをクリックすることで、Google ColabやKaggle Notebookなどのクラウドサービス上でNotebookを実行することができます。
+
+| ステップ | Colab | Kaggle | Studio Lab |
+| :--- | :--- | :--- | :--- |
+| 1. 正規分布 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/01_normal.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/01_normal.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/01_normal.ipynb) |
+| 2. 最尤推定 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/02_mle.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/02_mle.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/02_mle.ipynb) |
+| 3. 多次元正規分布 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/03_multi_normal.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/03_multi_normal.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/03_multi_normal.ipynb) |
+| 4. 混合ガウスモデル | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/04_gmm.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/04_gmm.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/04_gmm.ipynb) |
+| 5. EMアルゴリズム | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/05_em.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/05_em.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/05_em.ipynb) |
+| 6. ニューラルネットワーク | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/06_pytorch.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/06_pytorch.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/06_pytorch.ipynb) |
+| 7. 変分オートエンコーダ | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/07_vae.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/07_vae.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/07_vae.ipynb) |
+| 9. 拡散モデルの実装 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/09_diffusion_model.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/09_diffusion_model.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/09_diffusion_model.ipynb) |
+| 10.  拡散モデルの応用 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/10_diffusion_model2.ipynb) | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/10_diffusion_model2.ipynb) | [![Open In SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/oreilly-japan/deep-learning-from-scratch-5/blob/master/notebooks/10_diffusion_model2.ipynb) |
 
 
 ## Pythonと外部ライブラリ

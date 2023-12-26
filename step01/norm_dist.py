@@ -10,4 +10,6 @@ x = np.linspace(-5, 5, 100)
 y = normal(x)
 
 plt.plot(x, y)
+plt.xlabel('x')
+plt.ylabel('y')
 plt.show()

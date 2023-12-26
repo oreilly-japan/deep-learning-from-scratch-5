@@ -7,8 +7,8 @@ print(x.shape)
 print(x.ndim)
 W = np.array([[1, 2, 3],
               [4, 5, 6]])
-print(W.shape)
 print(W.ndim)
+print(W.shape)
 
 # element-wise operation
 W = np.array([[1, 2, 3], [4, 5, 6]])

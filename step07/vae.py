@@ -41,8 +41,8 @@ class Decoder(nn.Module):
         h = self.linear1(z)
         h = F.relu(h)
         h = self.linear2(h)
-        y = F.sigmoid(h)
-        return y
+        x_hat = F.sigmoid(h)
+        return x_hat
 
 
 def reparameterize(mu, sigma):
@@ -113,5 +113,5 @@ with torch.no_grad():
 
 grid_img = torchvision.utils.make_grid(generated_images, nrow=8, padding=2, normalize=True)
 plt.imshow(grid_img.permute(1, 2, 0))
-plt.axis("off")
+plt.axis('off')
 plt.show()

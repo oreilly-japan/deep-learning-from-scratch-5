@@ -10,6 +10,6 @@ print(xs[0])
 print(xs[1])
 
 plt.scatter(xs[:,0], xs[:,1])
-plt.xlabel('Duration of eruption')
-plt.ylabel('Interval between eruptions')
+plt.xlabel('Duration of eruption(Min)')
+plt.ylabel('Interval between eruptions(Min)')
 plt.show()

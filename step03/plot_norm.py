@@ -13,8 +13,8 @@ mu = np.array([0.5, -0.2])
 cov = np.array([[2.0, 0.3],
                 [0.3, 0.5]])
 
-x = y = np.arange(-5, 5, 0.1)
-X, Y = np.meshgrid(x, y)
+xs = ys = np.arange(-5, 5, 0.1)
+X, Y = np.meshgrid(xs, ys)
 Z = np.zeros_like(X)
 
 for i in range(X.shape[0]):
@@ -23,10 +23,11 @@ for i in range(X.shape[0]):
         Z[i, j] = multivariate_normal(x, mu, cov)
 
 fig = plt.figure()
-ax1 = fig.add_subplot(1, 2, 1, projection='3d')  
+ax1 = fig.add_subplot(1, 2, 1, projection='3d')
 ax1.set_xlabel('x')
 ax1.set_ylabel('y')
-ax1.plot_surface(X, Y, Z, cmap='jet')
+ax1.set_zlabel('z')
+ax1.plot_surface(X, Y, Z, cmap='viridis')
 
 ax2 = fig.add_subplot(1, 2, 2)
 ax2.set_xlabel('x')

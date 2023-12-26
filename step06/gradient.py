@@ -11,10 +11,13 @@ y = rosenbrock(x0, x1)
 y.backward()
 print(x0.grad, x1.grad)
 
-lr = 0.001 # learning rate
-iters = 10001 # iteration count
+lr = 0.001  # learning rate
+iters = 10000  # iteration count
 
 for i in range(iters):
+    if i % 1000 == 0:
+        print(x0.item(), x1.item())
+
     y = rosenbrock(x0, x1)
 
     y.backward()
@@ -25,5 +28,4 @@ for i in range(iters):
     x0.grad.zero_()
     x1.grad.zero_()
 
-    if i % 1000 == 0:
-        print(x0.item(), x1.item())
+print(x0.item(), x1.item())
