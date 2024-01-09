@@ -104,4 +104,6 @@ def plot_contour(w, mus, covs):
 
 plt.scatter(xs[:,0], xs[:,1])
 plot_contour(phis, mus, covs)
+plt.xlabel('Duration of eruption(Min)')
+plt.ylabel('Interval between eruptions(Min)')
 plt.show()
