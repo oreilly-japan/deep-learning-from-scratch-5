@@ -21,13 +21,14 @@ class Encoder(nn.Module):
         super().__init__()
         self.linear = nn.Linear(input_dim, hidden_dim)
         self.linear_mu = nn.Linear(hidden_dim, latent_dim)
-        self.linear_sigma = nn.Linear(hidden_dim, latent_dim)
+        self.linear_logvar = nn.Linear(hidden_dim, latent_dim)
 
     def forward(self, x):
         h = self.linear(x)
         h = F.relu(h)
         mu = self.linear_mu(h)
-        sigma = self.linear_sigma(h)
+        logvar = self.linear_logvar(h)
+        sigma = torch.exp(0.5 * logvar)
         return mu, sigma
 
 
@@ -103,6 +104,7 @@ plt.plot(epochs, losses, marker='o', linestyle='-')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.show()
+
 
 # generate new images
 with torch.no_grad():

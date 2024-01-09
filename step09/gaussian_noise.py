@@ -61,12 +61,16 @@ plt.show()
 
 
 # ============================================
-# q(x_t|x_{t+1})
+# q(x_t|x_0)
 # ============================================
 def add_noise(x_0, t, betas):
+    T = len(betas)
+    assert t >= 1 and t <= T
+    t_idx = t - 1  # betas[0] is for t=1
+
     alphas = 1 - betas
     alpha_bars = torch.cumprod(alphas, dim=0)
-    alpha_bar = alpha_bars[t]
+    alpha_bar = alpha_bars[t_idx]
 
     eps = torch.randn_like(x_0)
     x_t = torch.sqrt(alpha_bar) * x_0 + torch.sqrt(1 - alpha_bar) * eps

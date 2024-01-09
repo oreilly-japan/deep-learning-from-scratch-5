@@ -11,7 +11,7 @@ from torchvision import datasets, transforms
 input_dim = 784  # mnist image 28x28
 hidden_dim = 100
 latent_dim = 20
-epochs = 20
+epochs = 30
 learning_rate = 1e-3
 batch_size = 32
 
@@ -21,13 +21,14 @@ class Encoder(nn.Module):
         super().__init__()
         self.linear = nn.Linear(input_dim, hidden_dim)
         self.linear_mu = nn.Linear(hidden_dim, latent_dim)
-        self.linear_sigma = nn.Linear(hidden_dim, latent_dim)
+        self.linear_logvar = nn.Linear(hidden_dim, latent_dim)
 
     def forward(self, x):
         h = self.linear(x)
         h = F.relu(h)
         mu = self.linear_mu(h)
-        sigma = self.linear_sigma(h)
+        logvar = self.linear_logvar(h)
+        sigma = torch.exp(0.5 * logvar)
         return mu, sigma
 
 
@@ -118,6 +119,5 @@ with torch.no_grad():
 grid_img = torchvision.utils.make_grid(generated_images, nrow=8, padding=2, normalize=True)
 
 plt.imshow(grid_img.permute(1, 2, 0))
-plt.title('Generated Images')
 plt.axis('off')
 plt.show()

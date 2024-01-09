@@ -19,15 +19,15 @@ class ConvBlock(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self, out_ch=1):
+    def __init__(self, in_ch=1):
         super().__init__()
 
-        self.down1 = ConvBlock(1, 64)
+        self.down1 = ConvBlock(in_ch, 64)
         self.down2 = ConvBlock(64, 128)
         self.bot1 = ConvBlock(128, 256)
         self.up2 = ConvBlock(128 + 256, 128)
         self.up1 = ConvBlock(128 + 64, 64)
-        self.out = nn.Conv2d(64, out_ch, 1)
+        self.out = nn.Conv2d(64, in_ch, 1)
 
         self.maxpool = nn.MaxPool2d(2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear')
