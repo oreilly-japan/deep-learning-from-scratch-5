@@ -42,6 +42,6 @@ for n in range(N):
 plt.scatter(original_xs[:,0], original_xs[:,1], alpha=0.7, label='original')
 plt.scatter(new_xs[:,0], new_xs[:,1], alpha=0.7, label='generated')
 plt.legend()
-plt.xlabel('Duration of eruption(Min)')
-plt.ylabel('Interval between eruptions(Min)')
+plt.xlabel('Eruptions(Min)')
+plt.ylabel('Waiting(Min)')
 plt.show()
