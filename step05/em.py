@@ -14,7 +14,7 @@ covs = np.array([np.eye(2), np.eye(2)])
 K = len(phis)  # 2
 N = len(xs)  # 272
 MAX_ITERS = 100
-THESHOLD = 1e-4
+THRESHOLD = 1e-4
 
 def multivariate_normal(x, mu, cov):
     det = np.linalg.det(cov)
@@ -80,7 +80,7 @@ for iter in range(MAX_ITERS):
 
     next_likelihood = likelihood(xs, phis, mus, covs)
     diff = np.abs(next_likelihood - current_likelihood)
-    if diff < THESHOLD:
+    if diff < THRESHOLD:
         break
     current_likelihood = next_likelihood
 
