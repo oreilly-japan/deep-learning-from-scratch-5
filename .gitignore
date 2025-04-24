@@ -1,2 +1,37 @@
 .DS_Store
 *~
+
+# Pythonキャッシュ系
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Jupyter Notebookのチェックポイント
+.ipynb_checkpoints/
+
+# 仮想環境
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+
+# VSCode設定（プロジェクトによるけど共有しないなら）
+.vscode/
+
+# Mac特有のファイル
+.DS_Store
+
+# Python仮想環境管理
+.python-version
+
+# 出力ファイルや一時ファイルができるなら
+*.log
+*.tmp
+*.swp
+
+# 自分用に作った一時Notebookなど（必要なら）
+Untitled.ipynb
+dataset/
+*.pkl
+data
